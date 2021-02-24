@@ -16,7 +16,8 @@
         "amphp/file": "^1.0",
         "jmoati/mimey": "^3.0",
         "symfony/polyfill-uuid": "^1.22",
-        "symfony/lock": "^5.2"
+        "symfony/lock": "^5.2",
+        "amphp/http-server": "^2.1"
     },
     "autoload": {
         "psr-4": {
