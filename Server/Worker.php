@@ -8,6 +8,7 @@ use Amp\Http\Server\Response as AmpResponse;
 use Amp\Producer;
 use Amp\Promise;
 use Amp\Parallel\Context\Context;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\LockInterface;
 use Symfony\Component\Lock\Store\FlockStore;
@@ -32,8 +33,10 @@ class Worker
     ) {
         $this->context = create($this->workerPath);;
         $this->uuid = (string) uuid_create();
-
-        $store = new FlockStore($this->tmpPath.'/stores');
+        
+        (new Filesystem())->mkdir($this->getStoresFilePath());
+        
+        $store = new FlockStore($this->getStoresFilePath());
         $this->lock = (new LockFactory($store))->createLock($this->getContentFilepath(), 1800);
     }
 
@@ -45,6 +48,11 @@ class Worker
     private function getContentFilepath(): string
     {
         return $this->tmpPath.'/'.$this->uuid;
+    }
+    
+    private function getStoresFilePath(): string
+    {
+        return $this->tmpPath.'/stores';
     }
 
     private function cleanup() {
