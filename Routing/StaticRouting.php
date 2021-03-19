@@ -22,10 +22,7 @@ final class StaticRouting implements RoutingInterface
         $this->mimes = new MimeTypes();
     }
     
-    /**
-     * @return false|string
-     */
-    private function filename(Request $request)
+    private function filename(Request $request): string|false
     {
         return realpath($this->projectDir.'/public'.$request->getUri()->getPath());
     }
@@ -42,7 +39,6 @@ final class StaticRouting implements RoutingInterface
         return call(function () use ($request) {
             $filename = $this->filename($request);
             $infos = pathinfo($filename);
-    
             $resource = fopen($this->filename($request), 'r');
             $stream = new ResourceInputStream($resource);
             

@@ -21,8 +21,9 @@ final class RequestHandler implements RequestHandlerInterface, LoggerAwareInterf
     public function __construct(
         iterable $routing
     ) {
+        $routing = iterator_to_array($routing); // mandatory for warmup
+        
         $this->callable = function (Request $request) use ($routing) {
-
             $this->logger->info(sprintf('[%s] %s', $request->getMethod(), $request->getUri()));
             
             foreach ($routing as $router) {

@@ -3,19 +3,21 @@ services:
     autowire: true
     autoconfigure: true
 
-  _instanceof:
-    Jmoati\MetronomeBundle\Routing\Specs\RoutingInterface:
-      tags: ['app.routing']
-
-  Jmoati\MetronomeBundle\Server\RequestHandler:
-    arguments:
-      $routing: !tagged_iterator { tag: app.routing, default_priority_method: getPriority }
-
-  Jmoati\MetronomeBundle\Server\ServerStartCommand:
+  Jmoati\MetronomeBundle\Routing\StaticRouting:
     arguments:
       $projectDir: '%kernel.project_dir%'
+    tags: ['app.routing']
 
   Jmoati\MetronomeBundle\Routing\SymfonyRouting:
     arguments:
       $workerPath: '%kernel.project_dir%/vendor/jmoati/metronome-bundle/bin/worker.php'
       $tmpPath:  '%kernel.project_dir%/var/tmp'
+    tags: ['app.routing']
+
+  Jmoati\MetronomeBundle\Server\RequestHandler:
+    arguments:
+      $routing: !tagged { tag: app.routing, default_priority_method: getPriority }
+
+  Jmoati\MetronomeBundle\Server\ServerStartCommand:
+    arguments:
+      $projectDir: '%kernel.project_dir%'

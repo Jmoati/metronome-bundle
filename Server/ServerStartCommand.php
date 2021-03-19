@@ -5,7 +5,6 @@ namespace Jmoati\MetronomeBundle\Server;
 use Amp\Http\Server\HttpServer;
 
 use Amp\Loop;
-use Jmoati\MetronomeBundle\Routing\SymfonyRouting;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Console\Command\Command;
@@ -23,7 +22,6 @@ final class ServerStartCommand extends Command implements LoggerAwareInterface
     public function __construct(
         private string $projectDir,
         private RequestHandler $requestHandler,
-        private SymfonyRouting $symfonyRouting
     ) {
         parent::__construct();
     }
@@ -52,7 +50,6 @@ final class ServerStartCommand extends Command implements LoggerAwareInterface
             yield $server->start();
             
             Loop::onSignal(SIGINT, function (string $watcherId) use ($server) {
-                
                 Loop::cancel($watcherId);
                 yield $server->stop();
     
