@@ -14,7 +14,8 @@ class Request
         public array $cookies = [],
         public array $files = [],
         public array $server = [],
-        public ?string $contentPath = null
+        public ?string $contentPath = null,
+        public array $headers = [],
     ) {
 
     }

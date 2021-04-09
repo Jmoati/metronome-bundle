@@ -17,10 +17,12 @@ class StreamedRequest extends SfRequest
         array $files = [],
         array $server = [],
         $content = null,
+        array $headers = [],
         ?LockInterface $lock = null
     ) {
         $request = parent::create($uri, $method, $parameters, $cookies, $files, $server, $content);
         $request->lock = $lock;
+        $request->headers->add($headers);
 
         return $request;
     }

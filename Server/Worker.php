@@ -8,6 +8,7 @@ use Amp\Http\Server\Response as AmpResponse;
 use Amp\Producer;
 use Amp\Promise;
 use Amp\Parallel\Context\Context;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\LockInterface;
 use Symfony\Component\Lock\Store\FlockStore;
@@ -30,13 +31,19 @@ class Worker
       private string $workerPath,
       private string $tmpPath,
     ) {
-        $this->context = create($this->workerPath);;
+        $this->context = create($this->workerPath);
         $this->uuid = (string) uuid_create();
 
-        $store = new FlockStore($this->tmpPath.'/stores');
+        (new Filesystem())->mkdir($this->getStoresDirectory());
+        $store = new FlockStore($this->getStoresDirectory());
         $this->lock = (new LockFactory($store))->createLock($this->getContentFilepath(), 1800);
     }
 
+    private function getStoresDirectory(): string
+    {
+        return $this->tmpPath.'/stores';
+    }
+    
     public function __destruct()
     {
         $this->cleanup();
@@ -80,7 +87,7 @@ class Worker
     
     private function mapRequest(AmpRequest $request, ?string $contentPath): Request
     {
-        return new Request(
+        $sfRequest = new Request(
             $request->getUri()->getPath() . '?' . $request->getUri()->getQuery(),
             $request->getMethod(),
             [],
@@ -89,8 +96,11 @@ class Worker
             $_SERVER + [
                 'HTTP_HOST' => $request->getUri()->getHost() . ':' . $request->getUri()->getPort(),
             ],
-            $contentPath
+            $contentPath,
+            $request->getHeaders()
         );
+        
+        return $sfRequest;
     }
     
     public function handle(?AmpRequest $ampRequest): Promise

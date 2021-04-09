@@ -34,7 +34,11 @@ return function (Channel $channel): Generator
         Debug::enable();
     }
     
-    $kernel = new Kernel($_SERVER['APP_ENV'], (bool)$_SERVER['APP_DEBUG']);
+    if (empty($_SERVER['KERNEL_CLASS'])) {
+        $_SERVER['KERNEL_CLASS'] = 'App\Kernel';
+    }
+    
+    $kernel = new $_SERVER['KERNEL_CLASS']($_SERVER['APP_ENV'], (bool)$_SERVER['APP_DEBUG']);
     
     while (true) {
         try {
@@ -62,6 +66,7 @@ return function (Channel $channel): Generator
                     $request->files,
                     $request->server,
                     $content,
+                    $request->headers,
                     $lock
                 );
             }
