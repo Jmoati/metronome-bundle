@@ -15,9 +15,9 @@ use Symfony\Component\Lock\Store\FlockStore;
 use function Amp\ByteStream\pipe;
 use function Amp\call;
 use Amp\File\File;
-use function Amp\File\open;
+use function Amp\File\openFile;
 use function Amp\Parallel\Context\create;
-use function Amp\File\unlink;
+use function Amp\File\deleteFile;
 
 class Worker
 {
@@ -58,8 +58,8 @@ class Worker
         if (null !== $this->file) {
             $this->file->close();
             $this->file = null;
-
-            unlink($this->getContentFilepath());
+    
+            deleteFile($this->getContentFilepath());
         }
     }
 
@@ -122,7 +122,7 @@ class Worker
                     die('wtf ???');
                 }
 
-                $this->file = yield open($this->getContentFilepath(), "w+");
+                $this->file = yield openFile($this->getContentFilepath(), "w+");
                 $body = $ampRequest->getBody();
                 $body->increaseSizeLimit(10 * 1024 ** 2 * 1024);
 

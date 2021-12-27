@@ -8,7 +8,7 @@ use Symfony\Component\Lock\LockInterface;
 class StreamedRequest extends SfRequest
 {
     private ?LockInterface $lock = null;
-
+    
     public static function create(
         string $uri,
         string $method = 'GET',
@@ -19,7 +19,7 @@ class StreamedRequest extends SfRequest
         $content = null,
         array $headers = [],
         ?LockInterface $lock = null
-    ) {
+    ) : static {
         $request = parent::create($uri, $method, $parameters, $cookies, $files, $server, $content);
         $request->lock = $lock;
         $request->headers->add($headers);

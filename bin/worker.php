@@ -1,7 +1,6 @@
 <?php
 
 use Amp\Parallel\Sync\Channel;
-use App\Kernel;
 use Jmoati\MetronomeBundle\Server\Response;
 use Jmoati\MetronomeBundle\Server\StreamedRequest;
 use Jmoati\MetronomeBundle\Server\StreamedResponse;

@@ -11,12 +11,12 @@ class StreamedResponse extends SfStreamedResponse
         return $this->callback;
     }
     
-    public function sendContent()
+    public function sendContent(): static
     {
         return $this;
     }
     
-    public function sendHeaders()
+    public function sendHeaders(): static
     {
         return $this;
     }

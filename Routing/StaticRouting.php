@@ -13,12 +13,11 @@ use function Amp\call;
 
 final class StaticRouting implements RoutingInterface
 {
-    private string $projectDir;
     private MimeTypes $mimes;
     
-    public function __construct(string $projectDir)
-    {
-        $this->projectDir = $projectDir;
+    public function __construct(
+        private string $projectDir
+    ) {
         $this->mimes = new MimeTypes();
     }
     
